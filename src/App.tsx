@@ -11,11 +11,12 @@ const artyom = new Artyom();
 
 const App = () => {
     const [channelName, setChannelName] = useState<string>("");
-    const [voice, setVoice] = useState<SpeechSynthesisVoice>(
-        artyom
-            .getVoices()
-            .find((voice: SpeechSynthesisVoice) => voice.default === true)
-    );
+
+    // const [voice, setVoice] = useState<SpeechSynthesisVoice>(
+    //     artyom
+    //         .getVoices()
+    //         .find((voice: SpeechSynthesisVoice) => voice.default === true)
+    // );
 
     const voiceOptions = (artyom.getVoices() as SpeechSynthesisVoice[]).map(
         (voice) => {
