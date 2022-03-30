@@ -1,5 +1,5 @@
 {
-    "name": "simple-tts",
+    "name": "simple-twitch-tts",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
