@@ -48,7 +48,12 @@ const App = () => {
 
         console.log(`${tags["display-name"]}: ${message}`);
 
-        queue.enqueue(message);
+        // speak(message);
+
+        utterance.text = message;
+        synth.speak(utterance);
+
+        // queue.enqueue(message);
 
         // speak(message);
     });
@@ -97,11 +102,11 @@ const App = () => {
 
     const [channelName, setChannelName] = useState<string>("");
 
-    const delay = 5000;
-    useEffect(() => {
-        console.log("we started checking the queue again");
-        let timer = setInterval(startQueue, delay);
-    }, []);
+    // const delay = 5000;
+    // useEffect(() => {
+    //     console.log("we started checking the queue again");
+    //     let timer = setInterval(startQueue, delay);
+    // }, []);
 
     return (
         <div className="App">
