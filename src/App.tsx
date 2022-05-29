@@ -1,57 +1,36 @@
-// https://docs.ourcodeworld.com/projects/artyom-js
-// @ts-expect-error - frustratingly this doesn't work well with TS
-import Artyom from "artyom.js";
 import React, { useEffect, useState } from "react";
 import tmi from "tmi.js";
 import "./App.css";
 
 import BForm from "react-bootstrap/Form";
+import Speech, { languageOptions, LanguageOptions } from "./classes/speech";
 
-const artyom = new Artyom();
-// artyom.initialize({lang: "en-GB", voiceURI: "Microsoft Hazel - English (United Kingdom)"});
-
-
-// TODO: sort out langauges:
-// https://github.com/sdkcarlos/artyom.js/issues/39#issuecomment-324627434
-// Just change the order of voice, artyom takes the first voice available for a language, so the order to select the female first when available would be:
-
-// const myAssistant = new Artyom();
-
-// Change voice order:
-// original object property prefers male voice:
-// "en-GB": ["Google UK English Male", "Google UK English Female", "en-GB", "en_GB"],
-
-// Prefer Female voice
-// myAssistant.ArtyomVoicesIdentifiers["en-GB"] = ["Google UK English Female", "Google UK English Male", "en-GB", "en_GB"];
-
-// // Rest of your code
-artyom.ArtyomVoicesIdentifiers["en-GB"] = ["Google UK English Female", "Google UK English Male", "en-GB", "en_GB"];
-
-
-artyom.initialize({
-    lang: "en-GB",
-    debug: true, // Show what recognizes in the Console
-    speed: 0.9, // Talk a little bit slow
-    mode: "normal", // This parameter is not required as it will be normal by default
-});
+const speech = new Speech("Microsoft Hazel - English (United Kingdom)");
+const artyom = speech.getSpeechInstance();
 
 const App = () => {
     const [channelName, setChannelName] = useState<string>("");
     // const [voice, setVoice] = useState<SpeechSynthesisVoice>();
+    const [voice, setVoice] = useState<LanguageOptions>(languageOptions[0]);
 
-    const [voice, setVoice] = useState<SpeechSynthesisVoice>(
-        artyom
-            .getVoices()
-            .find((voice: SpeechSynthesisVoice) => voice.default === true)
-    );
+    // const [voice, setVoice] = useState<SpeechSynthesisVoice>(
+    //     artyom
+    //         .getVoices()
+    //         .find((voice: SpeechSynthesisVoice) => voice.default === true)
+    // );
 
     useEffect(() => {
-        const defaultVoice = artyom
-            .getVoices()
-            .find((voice: SpeechSynthesisVoice) => voice.default === true);
+        // const defaultVoice = artyom
+        //     .getVoices()
+        //     .find((voice: SpeechSynthesisVoice) => voice.default === true);
 
-        setVoice(defaultVoice);
+        // setVoice(defaultVoice);
+        setVoice(languageOptions[0]);
     }, []);
+
+    useEffect(() => {
+        speech.setNewVoice(voice);
+    }, [voice]);
 
     const voiceOptions = (artyom.getVoices() as SpeechSynthesisVoice[]).map(
         (voice) => {
@@ -100,21 +79,38 @@ const App = () => {
             // maybe mute anything which starts with http(s)://
 
             // console.log(`${tags["display-name"]}: ${message}`);
-            artyom.say(message, { lang: voice.lang });
+            artyom.say(message);
         });
     };
 
     const disconnectClient = async () => {
-        await client.disconnect();
+        if (
+            client.readyState() === "OPEN" ||
+            client.readyState() === "CONNECTING"
+        ) {
+            console.log(`disconnecting from ${channelName}`);
+            await client.disconnect();
 
-        // stops speech just terminating half way through a sentence - not sure if this is a good idea ?
-        // https://docs.ourcodeworld.com/projects/artyom-js/documentation/methods/when
-        artyom.when("SPEECH_SYNTHESIS_END", () => {
-            artyom.shutUp();
-            artyom.clearGarbageCollection();
-        });
+            // stops speech just terminating half way through a sentence - not sure if this is a good idea ?
+            // https://docs.ourcodeworld.com/projects/artyom-js/documentation/methods/when
+            artyom.when("SPEECH_SYNTHESIS_END", () => {
+                artyom.shutUp();
+                artyom.clearGarbageCollection();
+            });
 
-        console.log(`disconnected from ${channelName}`);
+            console.log(`client disconnected`);
+        }
+    };
+
+    // TODO: say voice updated (toast menu?)
+    const voiceSelectionOnChange = (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        event.preventDefault();
+        event.persist();
+
+        const value = event.target.value as LanguageOptions;
+        setVoice(value);
     };
 
     return (
@@ -127,14 +123,14 @@ const App = () => {
                     onChange={(val) => setChannelName(val.target.value)}
                     value={channelName}
                 />
-                <BForm.Select aria-label="Default select example">
-                    {/* <option>Open this select menu</option> */}
-                    {/* <option value="1">One</option> */}
-                    {/* <option value="2">Two</option> */}
-                    {/* <option value="3">Three</option> */}
-                    {voiceOptions.map((voice) => {
+                <BForm.Select
+                    aria-label="Default select example"
+                    onChange={(e) => voiceSelectionOnChange(e)}
+                    value={voice}
+                >
+                    {languageOptions.map((voice) => {
                         // console.log(voice);
-                        return <option key={voice.name}>{voice.name}</option>;
+                        return <option key={voice}>{voice}</option>;
                     })}
                 </BForm.Select>
                 <p>
