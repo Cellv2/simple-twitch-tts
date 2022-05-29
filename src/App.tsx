@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import tmi from "tmi.js";
 import "./App.css";
 
 import BForm from "react-bootstrap/Form";
 import speechSingleton from "./classes/speech";
+import twitchClientSingleton from "./classes/twitch";
 import {
     languageOptions,
     LanguageOptions,
 } from "./constants/language.constants";
-import twitchClientSingleton from "./classes/twitch";
 
 const App = () => {
     const [channelName, setChannelName] = useState<string>("");
