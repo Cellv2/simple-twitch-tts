@@ -1,5 +1,5 @@
 import tmi from "tmi.js";
-import speechSingleton, { SpeehInterface } from "./speech";
+import speechSingleton from "./speech";
 
 interface TwitchClientConstructor {
     new (): TwitchClientInterface;

@@ -3,7 +3,7 @@
 import Artyom from "artyom.js";
 import {
     LanguageConfigurations,
-    languageConfigurations
+    languageConfigurations,
 } from "../constants/language.constants";
 
 export interface SpeechConstructor {
@@ -12,11 +12,10 @@ export interface SpeechConstructor {
         speed?: number,
         volume?: number,
         debug?: boolean
-    ): SpeehInterface;
+    ): SpeechInterface;
 }
 
-// TODO: rename this................
-export interface SpeehInterface {
+export interface SpeechInterface {
     getSpeechInstance: () => Artyom;
     setNewSpeed: (speed: number) => void;
     setNewVoice: (
@@ -25,7 +24,7 @@ export interface SpeehInterface {
     setNewVolume: (volume: number) => void;
 }
 
-const Speech: SpeechConstructor = class Speech implements SpeehInterface {
+const Speech: SpeechConstructor = class Speech implements SpeechInterface {
     // just used to keep track of the current languagewithout needing to do through the speechInstance
     displayName: LanguageConfigurations["displayName"];
     speechInstance: Artyom;
@@ -90,6 +89,8 @@ const Speech: SpeechConstructor = class Speech implements SpeehInterface {
     };
 };
 
-const speechSingleton = new Speech("Microsoft Hazel - English (United Kingdom)")
+const speechSingleton = new Speech(
+    "Microsoft Hazel - English (United Kingdom)"
+);
 
 export default speechSingleton;
