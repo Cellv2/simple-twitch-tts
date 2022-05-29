@@ -23,23 +23,6 @@ const App = () => {
     }, [volume]);
 
     // TODO: say voice updated (toast menu?)
-    const voiceSelectionOnChange = (
-        event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        event.preventDefault();
-
-        const value = event.target.value as LanguageOptions;
-        setVoice(value);
-    };
-
-    const volumeRangeOnChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        event.preventDefault();
-
-        const value = event.target.value;
-        setVolume(value);
-    };
 
     return (
         <div className="App">
@@ -53,7 +36,9 @@ const App = () => {
                 />
                 <BForm.Select
                     aria-label="Default select example"
-                    onChange={voiceSelectionOnChange}
+                    onChange={(e) =>
+                        setVoice(e.target.value as LanguageOptions)
+                    }
                     value={voice}
                 >
                     {languageOptions.map((voice) => {
@@ -80,7 +65,7 @@ const App = () => {
                 </button>
                 <>
                     <BForm.Label>Volume: {+volume * 2}</BForm.Label>
-                    <BForm.Range onChange={volumeRangeOnChange} />
+                    <BForm.Range onChange={(e) => setVolume(e.target.value)} />
                 </>
             </header>
         </div>
