@@ -68,9 +68,8 @@ const Speech: SpeechConstructor = class Speech implements SpeechInterface {
     };
 
     setNewSpeed = (speed: number): void => {
-        const { debug, lang, volume } =
-            this.getSpeechInstance().getProperties();
-        this.setSpeechInstance(lang, speed, volume, debug);
+        const { debug, volume } = this.getSpeechInstance().getProperties();
+        this.setSpeechInstance(this.displayName, speed, volume, debug);
     };
 
     setNewVoice = (
@@ -84,8 +83,9 @@ const Speech: SpeechConstructor = class Speech implements SpeechInterface {
     };
 
     setNewVolume = (volume: number): void => {
-        const { debug, lang, speed } = this.getSpeechInstance().getProperties();
-        this.setSpeechInstance(lang, speed, volume, debug);
+        const { debug, speed } = this.getSpeechInstance().getProperties();
+        // devide by 50 as the default voice volume is 1, but the slider gives 50 as the default value
+        this.setSpeechInstance(this.displayName, speed, volume / 50, debug);
     };
 };
 
