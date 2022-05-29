@@ -6,7 +6,7 @@ import {
     languageConfigurations
 } from "../constants/language.constants";
 
-interface SpeechConstructor {
+export interface SpeechConstructor {
     new (
         languageToInit: LanguageConfigurations["displayName"],
         speed?: number,
@@ -15,7 +15,8 @@ interface SpeechConstructor {
     ): SpeehInterface;
 }
 
-interface SpeehInterface {
+// TODO: rename this................
+export interface SpeehInterface {
     getSpeechInstance: () => Artyom;
     setNewSpeed: (speed: number) => void;
     setNewVoice: (
@@ -89,4 +90,6 @@ const Speech: SpeechConstructor = class Speech implements SpeehInterface {
     };
 };
 
-export default Speech;
+const speechSingleton = new Speech("Microsoft Hazel - English (United Kingdom)")
+
+export default speechSingleton;
