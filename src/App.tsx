@@ -3,7 +3,11 @@ import tmi from "tmi.js";
 import "./App.css";
 
 import BForm from "react-bootstrap/Form";
-import Speech, { languageOptions, LanguageOptions } from "./classes/speech";
+import Speech from "./classes/speech";
+import {
+    languageOptions,
+    LanguageOptions,
+} from "./constants/language.constants";
 
 const speech = new Speech("Microsoft Hazel - English (United Kingdom)");
 const artyom = speech.getSpeechInstance();
