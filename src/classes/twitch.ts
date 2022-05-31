@@ -1,4 +1,5 @@
 import tmi from "tmi.js";
+import { ToastComponentProps } from "../components/Toast";
 import speechSingleton from "./speech";
 
 interface TwitchClientConstructor {
@@ -6,8 +7,13 @@ interface TwitchClientConstructor {
 }
 
 interface TwitchClientInterface {
-    connectClient: (channel: string) => Promise<void>;
-    disconnectClient: () => Promise<void>;
+    connectClient: (
+        channel: string,
+        addToastListItem: (toastProps: ToastComponentProps) => void
+    ) => Promise<void>;
+    disconnectClient: (
+        addToastListItem: (toastProps: ToastComponentProps) => void
+    ) => Promise<void>;
 }
 
 const TwitchClient: TwitchClientConstructor = class TwitchClient
@@ -27,18 +33,28 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
         });
     }
 
-    connectClient = async (channel: string) => {
+    connectClient = async (
+        channel: string,
+        addToastListItem: (toastProps: ToastComponentProps) => void
+    ) => {
         this.channelName = channel;
 
         if (!this.channelName.length) {
             console.error("no channel set");
+            addToastListItem({
+                variant: "Warning",
+                heading: "No Channel Set",
+                message: "Please set a channel to connect",
+            });
+
+            return;
         }
 
         if (
             this.client.readyState() === "OPEN" ||
             this.client.readyState() === "CONNECTING"
         ) {
-            await this.disconnectClient();
+            await this.disconnectClient(addToastListItem);
         }
 
         // https://tmijs.com/
@@ -51,9 +67,21 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
         });
 
         console.log("connecting client");
-        await this.client
-            .connect()
-            .then(() => console.log(`connected to ${this.channelName}`));
+        addToastListItem({
+            variant: "Primary",
+            heading: `Connecting - ${this.channelName}`,
+            message: `Connecting to ${this.channelName}`,
+        });
+
+        await this.client.connect().then(() => {
+            console.log(`connected to ${this.channelName}`);
+        });
+
+        addToastListItem({
+            variant: "Success",
+            heading: `Connected`,
+            message: `Successfully connected to ${this.channelName}`,
+        });
 
         this.client.on("message", (channel, tags, message, self) => {
             if (self) {
@@ -72,12 +100,19 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
         });
     };
 
-    disconnectClient = async () => {
+    disconnectClient = async (
+        addToastListItem: (toastProps: ToastComponentProps) => void
+    ) => {
         if (
             this.client.readyState() === "OPEN" ||
             this.client.readyState() === "CONNECTING"
         ) {
             console.log(`disconnecting from ${this.channelName}`);
+            addToastListItem({
+                variant: "Danger",
+                heading: `Disconnecting`,
+                message: `Disconnecting from ${this.channelName}`,
+            });
             await this.client.disconnect();
 
             // stops speech just terminating half way through a sentence - not sure if this is a good idea ?
@@ -87,7 +122,18 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
                 this.speechSynth.clearGarbageCollection();
             });
 
+            addToastListItem({
+                variant: "Success",
+                heading: `Disconnected`,
+                message: `Successfully disconnected from ${this.channelName}`,
+            });
             console.log(`client disconnected`);
+        } else {
+            addToastListItem({
+                variant: "Info",
+                heading: `Not Connected`,
+                message: "Not currently connected to any channel!",
+            });
         }
     };
 };
