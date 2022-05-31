@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+import BButton from "react-bootstrap/Button";
+import BCol from "react-bootstrap/Col";
+import BContainer from "react-bootstrap/Container";
 import BForm from "react-bootstrap/Form";
+import BRow from "react-bootstrap/Row";
 import speechSingleton from "./classes/speech";
 import twitchClientSingleton from "./classes/twitch";
 import {
@@ -26,48 +30,96 @@ const App = () => {
 
     return (
         <div className="App">
-            <header className="App-header">
-                <input
-                    type="text"
-                    name=""
-                    id="channelName"
-                    onChange={(val) => setChannelName(val.target.value)}
-                    value={channelName}
-                />
-                <BForm.Select
-                    aria-label="Default select example"
-                    onChange={(e) =>
-                        setVoice(e.target.value as LanguageOptions)
-                    }
-                    value={voice}
-                >
-                    {languageOptions.map((voice) => {
-                        // console.log(voice);
-                        return <option key={voice}>{voice}</option>;
-                    })}
-                </BForm.Select>
-                <p>
-                    ENSURE THE BELOW HAS VALIDATION THAT THERE IS A CHANNEL NAME
-                </p>
-                <button
-                    onClick={async () =>
-                        await twitchClientSingleton.connectClient(channelName)
-                    }
-                >
-                    connect me KEKW
-                </button>
-                <button
-                    onClick={async () =>
-                        await twitchClientSingleton.disconnectClient()
-                    }
-                >
-                    get me the hell out of here
-                </button>
-                <>
-                    <BForm.Label>Volume: {+volume * 2}</BForm.Label>
-                    <BForm.Range onChange={(e) => setVolume(e.target.value)} />
-                </>
-            </header>
+            <div className="App-header">
+                <BContainer>
+                    <BForm>
+                        <BForm.Group
+                            as={BRow}
+                            className="mb-3"
+                            controlId="formChannelName"
+                        >
+                            <BForm.Label column sm={2}>
+                                Channel
+                            </BForm.Label>
+                            <BCol sm={10}>
+                                <BForm.Control
+                                    type="text"
+                                    placeholder="Channel"
+                                    onChange={(val) =>
+                                        setChannelName(val.target.value)
+                                    }
+                                    value={channelName}
+                                />
+                            </BCol>
+                        </BForm.Group>
+
+                        <BForm.Group
+                            as={BRow}
+                            className="mb-3"
+                            controlId="formVoiceSelect"
+                        >
+                            <BForm.Label column sm={2}>
+                                Voice
+                            </BForm.Label>
+                            <BCol sm={10}>
+                                <BForm.Select
+                                    aria-label="Select voice language"
+                                    onChange={(e) =>
+                                        setVoice(
+                                            e.target.value as LanguageOptions
+                                        )
+                                    }
+                                    value={voice}
+                                >
+                                    {languageOptions.map((voice) => {
+                                        // console.log(voice);
+                                        return (
+                                            <option key={voice}>{voice}</option>
+                                        );
+                                    })}
+                                </BForm.Select>
+                            </BCol>
+                        </BForm.Group>
+                        <BForm.Group
+                            as={BRow}
+                            className="mb-3"
+                            controlId="formVolumeControl"
+                        >
+                            <BForm.Label column sm={2}>
+                                Volume: {+volume * 2}
+                            </BForm.Label>
+                            <BCol sm={10}>
+                                <BForm.Range
+                                    onChange={(e) => setVolume(e.target.value)}
+                                />
+                            </BCol>
+                        </BForm.Group>
+                        <BForm.Group as={BRow} className="mb-3">
+                            <BCol sm={{ span: 10, offset: 2 }}>
+                                <BButton
+                                    variant="primary"
+                                    onClick={async () =>
+                                        await twitchClientSingleton.connectClient(
+                                            channelName
+                                        )
+                                    }
+                                >
+                                    Connect
+                                </BButton>{" "}
+                                <BButton
+                                    type="button"
+                                    variant="outline-danger"
+                                    onClick={async () =>
+                                        await twitchClientSingleton.disconnectClient()
+                                    }
+                                >
+                                    Disconnect
+                                </BButton>
+                            </BCol>
+                        </BForm.Group>
+                    </BForm>
+                </BContainer>
+            </div>
         </div>
     );
 };
