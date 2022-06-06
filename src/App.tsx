@@ -167,7 +167,7 @@ const App = () => {
                         </BForm>
                         <BCol sm={{ span: 10, offset: 2 }}>
                             <span className="small">
-                                Voice and volume auto update on the next message :)
+                                Voice and volume will auto update on the next message :)
                             </span>
                         </BCol>
                     </BContainer>
