@@ -69,7 +69,7 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
         console.log("connecting client");
         addToastListItem({
             variant: "Primary",
-            heading: `Connecting - ${this.channelName}`,
+            heading: `Connecting`,
             message: `Connecting to ${this.channelName}`,
         });
 
