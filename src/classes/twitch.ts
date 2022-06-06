@@ -37,6 +37,13 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
         channel: string,
         addToastListItem: (toastProps: ToastComponentProps) => void
     ) => {
+        if (
+            this.client.readyState() === "OPEN" ||
+            this.client.readyState() === "CONNECTING"
+        ) {
+            await this.disconnectClient(addToastListItem);
+        }
+
         this.channelName = channel;
 
         if (!this.channelName.length) {
@@ -48,13 +55,6 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
             });
 
             return;
-        }
-
-        if (
-            this.client.readyState() === "OPEN" ||
-            this.client.readyState() === "CONNECTING"
-        ) {
-            await this.disconnectClient(addToastListItem);
         }
 
         // https://tmijs.com/
