@@ -73,7 +73,7 @@ const App = () => {
                         <BForm>
                             <BForm.Group
                                 as={BRow}
-                                className="mb-3"
+                                className="mb-3 d-flex align-items-center"
                                 controlId="formChannelName"
                             >
                                 <BForm.Label column sm={2}>
@@ -93,10 +93,10 @@ const App = () => {
 
                             <BForm.Group
                                 as={BRow}
-                                className="mb-3"
+                                className="mb-3 d-flex align-items-center"
                                 controlId="formVoiceSelect"
                             >
-                                <BForm.Label column sm={2}>
+                                <BForm.Label column sm={2} className="">
                                     Voice
                                 </BForm.Label>
                                 <BCol sm={10}>
@@ -123,7 +123,7 @@ const App = () => {
                             </BForm.Group>
                             <BForm.Group
                                 as={BRow}
-                                className="mb-3"
+                                className="mb-3 d-flex align-items-center"
                                 controlId="formVolumeControl"
                             >
                                 <BForm.Label column sm={2}>
@@ -131,6 +131,7 @@ const App = () => {
                                 </BForm.Label>
                                 <BCol sm={10}>
                                     <BForm.Range
+                                        className="bsRangeHeightOverride"
                                         onChange={(e) =>
                                             setVolume(e.target.value)
                                         }
