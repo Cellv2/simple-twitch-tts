@@ -7,8 +7,8 @@ import BContainer from "react-bootstrap/Container";
 import BForm from "react-bootstrap/Form";
 import BRow from "react-bootstrap/Row";
 import BToastContainer from "react-bootstrap/ToastContainer";
-import speechSingleton from "./classes/speech";
-import twitchClientSingleton from "./classes/twitch";
+import speechSingleton from "./services/speech";
+import twitchClientSingleton from "./services/twitch";
 import Toast, { ToastComponentProps } from "./components/Toast";
 import {
     languageOptions,
