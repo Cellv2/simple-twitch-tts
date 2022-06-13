@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+/* Range element had a 1.5rem height by default, which pushed the element up, so we override this */
+.bsRangeHeightOverride {
+    height: auto;;
+}

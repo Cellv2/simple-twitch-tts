@@ -7,8 +7,8 @@ import BContainer from "react-bootstrap/Container";
 import BForm from "react-bootstrap/Form";
 import BRow from "react-bootstrap/Row";
 import BToastContainer from "react-bootstrap/ToastContainer";
-import speechSingleton from "./classes/speech";
-import twitchClientSingleton from "./classes/twitch";
+import speechSingleton from "./services/speech";
+import twitchClientSingleton from "./services/twitch";
 import Toast, { ToastComponentProps } from "./components/Toast";
 import {
     languageOptions,
@@ -63,6 +63,19 @@ const App = () => {
     //     const interval = setInterval(() => {}, REMOVE_DELAY);
     // };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            while (!twitchClientSingleton.messageQueue().isEmpty()) {
+                speechSingleton
+                    .getSpeechInstance()
+                    .say(twitchClientSingleton.messageQueue().dequeue());
+            }
+        }, 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     // TODO: say voice updated (toast menu?)
 
     return (
@@ -73,7 +86,7 @@ const App = () => {
                         <BForm>
                             <BForm.Group
                                 as={BRow}
-                                className="mb-3"
+                                className="mb-3 d-flex align-items-center"
                                 controlId="formChannelName"
                             >
                                 <BForm.Label column sm={2}>
@@ -93,10 +106,10 @@ const App = () => {
 
                             <BForm.Group
                                 as={BRow}
-                                className="mb-3"
+                                className="mb-3 d-flex align-items-center"
                                 controlId="formVoiceSelect"
                             >
-                                <BForm.Label column sm={2}>
+                                <BForm.Label column sm={2} className="">
                                     Voice
                                 </BForm.Label>
                                 <BCol sm={10}>
@@ -123,7 +136,7 @@ const App = () => {
                             </BForm.Group>
                             <BForm.Group
                                 as={BRow}
-                                className="mb-3"
+                                className="mb-3 d-flex align-items-center"
                                 controlId="formVolumeControl"
                             >
                                 <BForm.Label column sm={2}>
@@ -131,6 +144,7 @@ const App = () => {
                                 </BForm.Label>
                                 <BCol sm={10}>
                                     <BForm.Range
+                                        className="bsRangeHeightOverride"
                                         onChange={(e) =>
                                             setVolume(e.target.value)
                                         }
@@ -164,6 +178,12 @@ const App = () => {
                                 </BCol>
                             </BForm.Group>
                         </BForm>
+                        <BCol sm={{ span: 10, offset: 2 }}>
+                            <span className="small">
+                                Voice and volume will auto update on the next
+                                message :)
+                            </span>
+                        </BCol>
                     </BContainer>
                     <BToastContainer position="bottom-end" className="p-3">
                         {toastList.map((item) => {
