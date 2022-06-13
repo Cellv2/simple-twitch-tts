@@ -1,13 +1,13 @@
 interface QueueConstructor {
     new (
-        maxQueueSize: number,
-        allowQueueDrop: boolean,
+        maxQueueSize?: number,
+        allowQueueDrop?: boolean,
         // ugly but whatever :)
-        queueDropPct: 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100
+        queueDropPct?: 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100
     ): QueueInterface;
 }
 
-interface QueueInterface {
+export interface QueueInterface {
     clear: () => void;
     dequeue: () => any | null;
     enqueue: (item: any) => void;

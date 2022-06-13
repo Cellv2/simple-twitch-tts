@@ -1,5 +1,6 @@
 import tmi from "tmi.js";
 import { ToastComponentProps } from "../components/Toast";
+import Queue, { QueueInterface } from "../helpers/queue.helper";
 import speechSingleton from "./speech";
 
 interface TwitchClientConstructor {
@@ -14,6 +15,7 @@ interface TwitchClientInterface {
     disconnectClient: (
         addToastListItem: (toastProps: ToastComponentProps) => void
     ) => Promise<void>;
+    messageQueue: () => QueueInterface
 }
 
 const TwitchClient: TwitchClientConstructor = class TwitchClient
@@ -22,6 +24,7 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
     channelName: string = "";
     client: tmi.Client;
     speechSynth = speechSingleton.getSpeechInstance();
+    queue = new Queue();
     constructor() {
         // https://tmijs.com/
         this.client = new tmi.Client({
@@ -96,7 +99,8 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
             // maybe mute anything which starts with http(s)://
 
             // console.log(`${tags["display-name"]}: ${message}`);
-            this.speechSynth.say(message);
+            // this.speechSynth.say(message);
+            this.queue.enqueue(message);
         });
     };
 
@@ -136,6 +140,8 @@ const TwitchClient: TwitchClientConstructor = class TwitchClient
             });
         }
     };
+
+    messageQueue = () => this.queue;
 };
 
 const twitchClientSingleton = new TwitchClient();

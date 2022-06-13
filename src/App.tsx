@@ -63,6 +63,19 @@ const App = () => {
     //     const interval = setInterval(() => {}, REMOVE_DELAY);
     // };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            while (!twitchClientSingleton.messageQueue().isEmpty()) {
+                speechSingleton
+                    .getSpeechInstance()
+                    .say(twitchClientSingleton.messageQueue().dequeue());
+            }
+        }, 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     // TODO: say voice updated (toast menu?)
 
     return (
@@ -167,7 +180,8 @@ const App = () => {
                         </BForm>
                         <BCol sm={{ span: 10, offset: 2 }}>
                             <span className="small">
-                                Voice and volume will auto update on the next message :)
+                                Voice and volume will auto update on the next
+                                message :)
                             </span>
                         </BCol>
                     </BContainer>
