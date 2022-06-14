@@ -33,7 +33,7 @@ const Queue: QueueConstructor = class Queue implements QueueInterface {
     constructor(
         maxQueueSize: number = 100,
         allowQueueDrop: boolean = true,
-        queueDropPct: number = 50
+        queueDropPct: number = 10
     ) {
         this.maxSize = maxQueueSize;
         this.queueDropEnabled = allowQueueDrop;
@@ -55,7 +55,12 @@ const Queue: QueueConstructor = class Queue implements QueueInterface {
     };
 
     enqueue = (item: any) => {
-        // TODO: add queue drop
+        // force remove items from the front of the queue if it's full
+        if (this.queueDropEnabled && this.tail >= this.maxSize) {
+            const numItemsToRemove = this.queueDropPct * this.maxSize;
+            this.data = this.data.slice(numItemsToRemove - 1, this.maxSize);
+        }
+
         if (this.tail < this.maxSize) {
             this.data[this.tail] = item;
             this.tail = this.tail + 1;
