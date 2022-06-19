@@ -154,8 +154,10 @@ const App = () => {
                             <BForm.Group as={BRow} className="mb-3">
                                 <BCol sm={{ span: 10, offset: 2 }}>
                                     <BButton
+                                        type="submit"
                                         variant="primary"
-                                        onClick={async () => {
+                                        onClick={async (evt) => {
+                                            evt.preventDefault();
                                             await twitchClientSingleton.connectClient(
                                                 channelName,
                                                 addToastListItem
