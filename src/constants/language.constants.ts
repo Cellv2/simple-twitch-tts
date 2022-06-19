@@ -1,9 +1,9 @@
 export const languageOptions = [
+    "Google UK English Female",
+    "Google UK English Male",
     "Microsoft Hazel - English (United Kingdom)",
     "Microsoft Susan - English (United Kingdom)",
     "Microsoft George - English (United Kingdom)",
-    "Google UK English Female",
-    "Google UK English Male",
 ] as const;
 export type LanguageOptions = typeof languageOptions[number];
 
